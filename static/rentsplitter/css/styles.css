@@ -1,0 +1,12 @@
+body {
+    margin-bottom: 50px;
+}
+
+#alert {
+    position: fixed;
+    top: 50px;
+}
+
+.pad-close {
+    padding-left: 5px;
+}
