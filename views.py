@@ -37,4 +37,31 @@ def index(request):
 
 @require_POST
 def expense(request):
-    return JsonResponse({'yay': True})
+    try:
+        amt = decimal_make(request.POST['amount'], prec=2)
+        note = request.POST['note']
+        if not note:
+            raise RentsplitterError('Note cannot be empty')
+        try:
+            payer = User.objects.get(name=request.POST['payer'])
+        except:
+            raise RentsplitterError('Payer does not exist')
+        if request.POST['type'] == 'utility':
+            u = UtilityEntry(amount=amt, payer=payer, note=note)
+            u.save()
+        elif request.POST['type'] == 'debt':
+            try:
+                payee = User.objects.get(name=request.POST['payee'])
+            except:
+                raise RentsplitterError('Payee does not exist')
+            if payer.name == payee.name:
+                raise RentsplitterError('Payer and payee cannot be the same')
+            d = DebtEntry(amount=amt, payer=payer, payee=payee, note=note)
+            d.save()
+        else:
+            raise RentsplitterError('Invalid type')
+        return JsonResponse({})
+    except KeyError:
+        return JsonResponse({'error': 'Missing parameter'})
+    except RentsplitterError as e:
+        return JsonResponse({'error': e.msg})
