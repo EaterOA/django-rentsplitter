@@ -43,7 +43,8 @@
         </tr>
     </table>
     <h3>Add expense</h3>
-    <form method="post" id="expense-form">{% csrf_token %}
+    <form method="post" id="expense-form">
+        {% csrf_token %}
         <div class="form-group">
             <div class="radio">
                 <label><input type="radio" name="type" value="u" checked="checked">Utility</label>
@@ -55,18 +56,18 @@
         <div class="form-group">
             <label for="expense-user">User</label>
             <select id="expense-user" name="user" class="form-control">
-                <option>Alice</option>
-                <option>Bob</option>
-                <option>Carol</option>
+                {% for user in users %}
+                <option>{{ user }}</option>
+                {% endfor %}
             </select>
         </div>
         <div class="form-group">
             <fieldset id="expense-owed-field" disabled hidden>
             <label for="expense-owed">Owed to</label>
             <select id="expense-owed" name="owed" class="form-control">
-                <option>Alice</option>
-                <option>Bob</option>
-                <option>Carol</option>
+                {% for user in users %}
+                <option>{{ user }}</option>
+                {% endfor %}
             </select>
             </fieldset>
         </div>
