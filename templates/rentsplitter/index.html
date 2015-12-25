@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{% static "rentsplitter/css/bootstrap.min.css" %}">
     <link rel="stylesheet" type="text/css" href="{% static "rentsplitter/css/styles.css" %}">
     <script src="{% static "rentsplitter/js/jquery-2.1.4.min.js" %}"></script>
+    <script src="{% static "rentsplitter/js/js.cookie.js" %}"></script>
     <script src="{% static "rentsplitter/js/bootstrap.min.js" %}"></script>
     <script src="{% static "rentsplitter/js/rentsplitter.js" %}"></script>
 </head>
@@ -89,6 +90,7 @@
             <td>Payer</td>
             <td>Payee</td>
             <td>Note</td>
+            <td></td>
         </thead>
         <tbody>
             {% for entry in entries %}
@@ -98,6 +100,9 @@
                 <td>{{ entry.payer.name }}</td>
                 <td>{% if entry.type == "debt" %}{{ entry.payee.name }}{% endif %}</td>
                 <td>{{ entry.note }}</td>
+                <td class="no-stretch text-danger">
+                    <span id="delete_{{entry.id}}" class="glyphicon glyphicon-remove"></span>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

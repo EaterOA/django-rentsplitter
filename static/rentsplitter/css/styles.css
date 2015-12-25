@@ -10,3 +10,7 @@ body {
 .pad-close {
     padding-left: 5px;
 }
+
+.no-stretch {
+    width: 1%;
+}

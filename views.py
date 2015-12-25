@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 
-from .models import User, Rent, UtilityEntry, DebtEntry
+from .models import User, Rent, UtilityEntry, DebtEntry, Entry
 from .util import decimal_truncate, decimal_make, RentsplitterError
 
 def index(request):
@@ -65,3 +65,14 @@ def expense(request):
         return JsonResponse({'error': 'Missing parameter'})
     except RentsplitterError as e:
         return JsonResponse({'error': e.msg})
+
+@require_POST
+def delete(request):
+    try:
+        entry = Entry.objects.get(pk=request.POST['id'])
+        entry.delete()
+        return JsonResponse({})
+    except KeyError:
+        return JsonResponse({'error': 'Missing parameter'})
+    except Entry.DoesNotExist:
+        return JsonResponse({'error': 'Expense does not exist'})
