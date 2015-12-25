@@ -1,10 +1,9 @@
-from decimal import Decimal, ROUND_DOWN
-
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_POST
 
 from .models import User, Rent, UtilityEntry, DebtEntry
+from .util import decimal_truncate, decimal_make, RentsplitterError
 
 def index(request):
     base_rent = Rent.objects.first().amount
@@ -16,16 +15,16 @@ def index(request):
     if users:
         for util in utilities:
             pool += util.amount
-            users[util.payer] -= util.amount
+            users[util.payer.name] -= util.amount
         split = pool / len(users)
         for u in users:
             users[u] += split
         for debt in debts:
             users[debt.payer.name] += debt.amount
             users[debt.payee.name] -= debt.amount
-        subtotal = Decimal(0)
+        subtotal = decimal_make(0, prec=2)
         for u in users:
-            users[u] = users[u].quantize(Decimal('.01'), rounding=ROUND_DOWN)
+            users[u] = decimal_truncate(users[u], prec=2)
             subtotal += users[u]
         users[users.keys()[0]] += base_rent - subtotal
     context = {
