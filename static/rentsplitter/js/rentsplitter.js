@@ -8,12 +8,12 @@ $(document).ready(function()
         if (!this.checked) {
             return;
         }
-        if (this.value == "d") {
-            var o = $('#expense-owed-field');
+        if (this.value == "debt") {
+            var o = $('#expense-payee-field');
             o.show();
             o.prop("disabled", false);
-        } else if (this.value =="u") {
-            var o = $('#expense-owed-field');
+        } else if (this.value =="utility") {
+            var o = $('#expense-payee-field');
             o.hide();
             o.prop("disabled", true);
         }
@@ -27,7 +27,12 @@ $(document).ready(function()
             url: "expense",
             data: $(this).serialize(),
             success: function(data) {
-                showAlert("Successfully added", "alert-success");
+                if ('error' in data) {
+                    showAlert(data.error, "alert-warning");
+                } else {
+                    showAlert("Successfully added", "alert-success");
+                    location.reload(true);
+                }
                 b.button('reset');
             },
             error: function(data) {
