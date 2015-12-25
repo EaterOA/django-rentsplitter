@@ -16,5 +16,9 @@ class Entry(models.Model):
 class DebtEntry(Entry):
     payee   = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def type(self):
+        return "debt"
+
 class UtilityEntry(Entry):
-    pass
+    def type(self):
+        return "utility"

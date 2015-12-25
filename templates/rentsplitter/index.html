@@ -80,6 +80,27 @@
         </div>
         <button id="expense-submit" type="submit" class="btn btn-primary" data-loading-text="Submit">Submit</button>
     </form>
+    <h3>Expenses</h3>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <td>Type</td>
+            <td>Amount</td>
+            <td>Payer</td>
+            <td>Payee</td>
+            <td>Note</td>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr>
+                <td>{{ entry.type }}</td>
+                <td>{{ entry.amount }}</td>
+                <td>{{ entry.payer.name }}</td>
+                <td>{% if entry.type == "debt" %}{{ entry.payee.name }}{% endif %}</td>
+                <td>{{ entry.note }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 <div class="col-sm-3">
     <div id="alert"></div>
