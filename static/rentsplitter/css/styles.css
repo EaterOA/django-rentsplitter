@@ -13,4 +13,9 @@ body {
 
 .no-stretch {
     width: 1%;
+    white-space: nowrap;
+}
+
+.clickable {
+    cursor: pointer;
 }

@@ -47,8 +47,8 @@ def expense(request):
         except:
             raise RentsplitterError('Payer does not exist')
         if request.POST['type'] == 'utility':
-            u = UtilityEntry(amount=amt, payer=payer, note=note)
-            u.save()
+            e = UtilityEntry(amount=amt, payer=payer, note=note)
+            e.save()
         elif request.POST['type'] == 'debt':
             try:
                 payee = User.objects.get(name=request.POST['payee'])
@@ -56,8 +56,8 @@ def expense(request):
                 raise RentsplitterError('Payee does not exist')
             if payer.name == payee.name:
                 raise RentsplitterError('Payer and payee cannot be the same')
-            d = DebtEntry(amount=amt, payer=payer, payee=payee, note=note)
-            d.save()
+            e = DebtEntry(amount=amt, payer=payer, payee=payee, note=note)
+            e.save()
         else:
             raise RentsplitterError('Invalid type')
         return JsonResponse({})
