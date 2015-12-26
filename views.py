@@ -12,21 +12,27 @@ def index(request):
     utilities = list(UtilityEntry.objects.all())
     debts = list(DebtEntry.objects.all())
     entries = sorted(utilities + debts, key=lambda e: e.date)
+
     if users:
+        # add utilities to pool and count individual contribution
         for util in utilities:
             pool += util.amount
             users[util.payer.name] -= util.amount
-        split = pool / len(users)
-        for u in users:
-            users[u] += split
+
+        # factor in debt
         for debt in debts:
             users[debt.payer.name] += debt.amount
             users[debt.payee.name] -= debt.amount
+
+        # split as evenly as possible accounting for remainder
+        split = pool / len(users)
         subtotal = decimal_make(0, prec=2)
         for u in users:
+            users[u] += split
             users[u] = decimal_truncate(users[u], prec=2)
             subtotal += users[u]
         users[users.keys()[0]] += base_rent - subtotal
+
     context = {
         'base_rent': base_rent,
         'total_pool': pool,
@@ -46,9 +52,10 @@ def expense(request):
             payer = User.objects.get(name=request.POST['payer'])
         except:
             raise RentsplitterError('Payer does not exist')
+
         if request.POST['type'] == 'utility':
             e = UtilityEntry(amount=amt, payer=payer, note=note)
-            e.save()
+
         elif request.POST['type'] == 'debt':
             try:
                 payee = User.objects.get(name=request.POST['payee'])
@@ -57,10 +64,13 @@ def expense(request):
             if payer.name == payee.name:
                 raise RentsplitterError('Payer and payee cannot be the same')
             e = DebtEntry(amount=amt, payer=payer, payee=payee, note=note)
-            e.save()
+
         else:
             raise RentsplitterError('Invalid type')
+
+        e.save()
         return JsonResponse({})
+
     except KeyError:
         return JsonResponse({'error': 'Missing parameter'})
     except RentsplitterError as e:
@@ -72,6 +82,7 @@ def delete(request):
         entry = Entry.objects.get(pk=request.POST['id'])
         entry.delete()
         return JsonResponse({})
+
     except KeyError:
         return JsonResponse({'error': 'Missing parameter'})
     except Entry.DoesNotExist:
