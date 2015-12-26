@@ -9,9 +9,19 @@ Frontend thrown together with Bootstrap.
 Installation
 ===
 
-Use like any Django app.
+Install like any Django app.
 
 - Install the package with setuptools or copy the whole app over to the project directory
 - Add "rentsplitter" to INSTALLED_APPS
 - Add `url(r'^rent/', include('rentsplitter.urls'))`
 - `python manage.py migrate`
+- `python manage.py collectstatic`
+
+The Rent and Users need to be added manually. Enter `python manage.py shell`
+and enter:
+
+    from rentsplitter.model import User, Rent`
+    Rent(amount=1234).save()
+    User(name="Alice").save()
+    User(name="Bob").save()
+    ...
