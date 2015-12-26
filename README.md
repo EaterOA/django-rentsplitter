@@ -18,10 +18,10 @@ Install like any Django app.
 - `python manage.py collectstatic`
 
 The Rent and Users need to be added manually. Enter `python manage.py shell`
-and enter:
+and type:
 
-    from rentsplitter.model import User, Rent`
+    from rentsplitter.model import User, Rent
     Rent(amount=1234).save()
     User(name="Alice").save()
     User(name="Bob").save()
-    ...
+    # ...
