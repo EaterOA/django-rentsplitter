@@ -75,9 +75,11 @@ $(document).ready(function()
     }
 
     // add handler for expense delete buttons
-    $('[id^=delete_]').on('click', function(e) {
-        deleteExpense($(e.target));
-    });
+    $('[id^=delete_]')
+        .confirmation()
+        .on('click', function(e) {
+            deleteExpense($(e.target));
+        });
 
     // add handler for form submission
     $('#expense-form').submit(function(e) {
