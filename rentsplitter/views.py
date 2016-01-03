@@ -11,7 +11,7 @@ def index(request):
     users = {user.name: 0 for user in User.objects.all()}
     utilities = list(UtilityEntry.objects.all())
     debts = list(DebtEntry.objects.all())
-    entries = sorted(utilities + debts, key=lambda e: e.date)
+    entries = sorted(utilities + debts, key=lambda e: e.date, reverse=True)
 
     if users:
         # add utilities to pool and count individual contribution
